@@ -83,7 +83,7 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  background: white;
+  background: var(--color-background-soft);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   padding: 1rem 0;
@@ -124,7 +124,7 @@ main {
 .dropdown {
   position: absolute;
   right: 0;
-  background-color: white;
+  background-color: var(--color-background-soft);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 0.5rem;
   border-radius: 4px;
@@ -144,11 +144,5 @@ main {
 
 .dropdown button:hover {
   background-color: var(--color-border);
-}
-
-:root {
-  --color-primary: #007bff;
-  --color-text: #333;
-  --color-border: #ddd;
 }
 </style>
