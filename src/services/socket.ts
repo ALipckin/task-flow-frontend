@@ -1,7 +1,7 @@
-import { useNotifier } from '@/composables/useNotifier' // Импортируем useNotifier
+import { useNotifier } from '@/composables/useNotifier'
 
 let socket: WebSocket | null = null
-let onMessageCallback: ((data: Record<string, any>) => void) | null = null
+let onMessageCallback: ((data: Record<string, unknown>) => void) | null = null
 
 export function initSocket(url: string) {
   const { notify } = useNotifier()
@@ -27,9 +27,10 @@ export function initSocket(url: string) {
 
   socket.onmessage = (event: MessageEvent) => {
     try {
-      const raw = JSON.parse(event.data)
+      const raw = JSON.parse(event.data) as Record<string, unknown>
       console.log('[WebSocket] Parsed message:', raw)
 
+      onMessageCallback?.(raw)
       const messageText = formatSocketMessage(raw)
       notify(messageText, 'info')
     } catch (e) {
@@ -43,11 +44,11 @@ export function initSocket(url: string) {
   }
 }
 
-export function onMessage(callback: (data: Record<string, any>) => void) {
+export function onMessage(callback: (data: Record<string, unknown>) => void) {
   onMessageCallback = callback
 }
 
-export function formatSocketMessage(data: Record<string, any>): string {
+export function formatSocketMessage(data: Record<string, unknown>): string {
   return Object.entries(data)
     .map(([key, value]) => `${key}: ${value}`)
     .join('\n')

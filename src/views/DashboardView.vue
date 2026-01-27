@@ -7,13 +7,11 @@
 import {defineComponent, onMounted, ref} from "vue";
 import {getTasksData} from '@/api/taskApi';
 import type {Task} from "@/types/task.ts";
-import TaskCard from "@/components/cards/TaskCard.vue";
-import Status from "@/components/Status.vue";
 import TaskList from "@/components/TaskList.vue";
 
 
 export default defineComponent({
-  components: {TaskList, Status, TaskCard},
+  components: { TaskList },
   setup() {
     const isLoading = ref(true);
     const tasks = ref<Task[]>([]);

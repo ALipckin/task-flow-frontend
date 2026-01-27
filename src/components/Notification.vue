@@ -14,7 +14,9 @@
 </template>
 
 <script setup lang="ts">
+import { defineOptions } from 'vue'
 import { useNotifier } from '@/composables/useNotifier'
 
+defineOptions({ name: 'AppNotification' })
 const { snackbar, text, color } = useNotifier()
 </script>

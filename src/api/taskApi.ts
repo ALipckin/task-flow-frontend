@@ -10,7 +10,7 @@ export const getTasksData = async (
 ):
   Promise<Task[]> => {
 
-  const params: Record<string, any> = {};
+  const params: Record<string, string | number | bigint | undefined> = {};
 
   if (title?.length) params.title = title;
   if (performerId) params.performer_id = performerId;
@@ -36,8 +36,9 @@ export const createTask = async (data: NewTask): Promise<Task> => {
   return response.data.data;
 };
 
-export const deleteTask = async (id: bigint):Promise<any> => {
-  return await axios.get<ApiResponse<any>>(`${API_URLS.TASK}/${id}`, { withCredentials: true });
+export const deleteTask = async (id: bigint): Promise<ApiResponse<unknown>> => {
+  const response = await axios.get<ApiResponse<unknown>>(`${API_URLS.TASK}/${id}`, { withCredentials: true });
+  return response.data;
 };
 
 export const updateTask = async (id: bigint, data: NewTask): Promise<Task> => {

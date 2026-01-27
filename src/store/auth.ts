@@ -30,7 +30,9 @@ export const useAuthStore = defineStore('auth', {
         if (localStorage.getItem('token')) {
           const response = await axios.get<User & { message?: string }>(API_URLS.VALIDATE);
           if (response.status !== 200) throw new Error(`Error: server response ${response.status}`);
-          const {message, ...userData} = response.data;
+          const userData = Object.fromEntries(
+            Object.entries(response.data).filter(([key]) => key !== 'message')
+          ) as User;
           this.user = userData;
         }
         else{

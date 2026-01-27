@@ -69,7 +69,7 @@ const handleRegister = async () => {
       name: name.value
     })
     await router.push('/login')
-  } catch (error) {
+  } catch {
     errorMessage.value = 'Неверные учетные данные'
   } finally {
     loading.value = false

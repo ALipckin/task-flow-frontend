@@ -19,6 +19,7 @@ export const getStatuses = () => {
 };
 
 export default {
+  name: 'TaskStatus',
   props: {
     status: {
       type: String,

@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
 import { createTask } from "@/api/taskApi";
-import type {NewTask, Task} from "@/types/task";
+import type { NewTask } from '@/types/task';
 import UserSelect from "@/components/UserSelect.vue";
 import UserMultiSelect from "@/components/UserMultiSelect.vue";
 import { getStatuses } from "@/components/Status.vue";

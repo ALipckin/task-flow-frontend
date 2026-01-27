@@ -21,7 +21,7 @@ export const getUserData = () => {
 };
 
 export const getUsers = async ({ ids, search, page, limit }: GetUsersParams = {}) => {
-  const params: Record<string, any> = {};
+  const params: Record<string, string | number | string[] | undefined> = {};
 
   if (ids?.length) params.ids = ids.join(',');
   if (search) params.search = search;
