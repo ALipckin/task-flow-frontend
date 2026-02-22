@@ -60,13 +60,23 @@ const newTask = ref<NewTask>({
   observer_ids: [],
 });
 
+const normalizeUniqueObserverIds = (ids: Array<string | number | bigint>) => {
+  const uniqueByString = new Map<string, string | number | bigint>();
+  ids.forEach((id) => {
+    if (id !== null && id !== undefined && id !== "") {
+      uniqueByString.set(String(id), id);
+    }
+  });
+  return Array.from(uniqueByString.values());
+};
+
 const submitTask = async () => {
   try {
-  const taskData = {
+    const taskData = {
       ...newTask.value,
-      performer: newTask.value.performer_id,
-      creator: newTask.value.creator_id,
-      observers: newTask.value.observer_ids,
+      observer_ids: normalizeUniqueObserverIds(
+        (newTask.value.observer_ids ?? []) as Array<string | number | bigint>,
+      ) as NewTask["observer_ids"],
     };
 
     const createdTask = await createTask(taskData);
@@ -92,4 +102,3 @@ onMounted(async () => {
   await fetchUsers();
 });
 </script>
-

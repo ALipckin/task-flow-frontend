@@ -16,7 +16,7 @@ import { defineComponent, ref, watch } from "vue";
 import type { PropType } from "vue";
 
 interface User {
-  id: bigint;
+  id: string | number | bigint;
   name: string;
   email: string;
   displayName: string;
@@ -25,7 +25,7 @@ interface User {
 export default defineComponent({
   props: {
     modelValue: {
-      type: Array as PropType<bigint[]>,
+      type: Array as PropType<Array<string | number | bigint>>,
       required: false,
       default: () => [],
     },
@@ -40,11 +40,35 @@ export default defineComponent({
   },
   emits: ["update:modelValue"],
   setup(props, { emit }) {
-    const selectedUserIds = ref<bigint[]>(props.modelValue);
+    const normalizeUniqueIds = (ids: Array<string | number | bigint>) => {
+      const uniqueByString = new Map<string, string | number | bigint>();
+      ids.forEach((id) => {
+        if (id !== null && id !== undefined && id !== "") {
+          uniqueByString.set(String(id), id);
+        }
+      });
+      return Array.from(uniqueByString.values());
+    };
 
-    watch(selectedUserIds, (newValue) => {
-      emit("update:modelValue", newValue);
-    });
+    const selectedUserIds = ref<Array<string | number | bigint>>(
+      normalizeUniqueIds([...props.modelValue]),
+    );
+
+    watch(
+      () => props.modelValue,
+      (newValue) => {
+        selectedUserIds.value = normalizeUniqueIds([...(newValue ?? [])]);
+      },
+      { deep: true },
+    );
+
+    watch(
+      selectedUserIds,
+      (newValue) => {
+        emit("update:modelValue", normalizeUniqueIds([...(newValue ?? [])]));
+      },
+      { deep: true },
+    );
 
     return { selectedUserIds };
   },

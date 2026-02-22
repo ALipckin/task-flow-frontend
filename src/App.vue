@@ -37,16 +37,24 @@ const isMenuOpen = ref(false);
 import {API_URLS} from "@/api/apiUrls.ts";
 import { initSocket, onMessage } from '@/services/socket'
 import Notification from "@/components/Notification.vue";
+import { useNotifier } from "@/composables/useNotifier.ts";
+
+const { notify } = useNotifier();
 
 onMounted(async () => {
   isAuth.value = await authStore.isAuthenticated();
   initSocket(API_URLS.TASK_NOTIFICATIONS)
 
   onMessage((data) => {
+    const message =
+      typeof data.message === 'string'
+        ? data.message
+        : JSON.stringify(data.message ?? '');
+
     if (data.type === 'alert') {
-      notify(data.message, 'warning')
+      notify(message, 'warning')
     } else {
-      notify(data.message, 'info')
+      notify(message, 'info')
     }
   })
 });

@@ -16,7 +16,7 @@
                   </v-btn>
                 </v-col>
               </div>
-              <v-list-item-group>
+              <div>
                 <v-list-item v-for="task in tasks" :key="task.id">
                   <router-link :to="`/task/edit/${task.id}`" class="task-link p-0">
                     <TaskCard
@@ -28,19 +28,19 @@
                     </TaskCard>
                   </router-link>
                 </v-list-item>
-              </v-list-item-group>
-            </v-list>
-            <v-alert v-else type="info">
-                  Нет задач
-                  <v-btn href="/task/create" variant="outlined" density="comfortable">
-                    <font-awesome-icon :icon="['fas', 'plus']" />
-                  </v-btn>
-            </v-alert>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+              </div>
+             </v-list>
+             <v-alert v-else type="info">
+                   Нет задач
+                   <v-btn href="/task/create" variant="outlined" density="comfortable">
+                     <font-awesome-icon :icon="['fas', 'plus']" />
+                   </v-btn>
+             </v-alert>
+           </v-card-text>
+         </v-card>
+       </v-col>
+     </v-row>
+   </v-container>
 </template>
 
 <script lang="ts">

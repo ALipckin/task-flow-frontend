@@ -47,7 +47,7 @@ import UserSelect from "@/components/UserSelect.vue";
 import UserMultiSelect from "@/components/UserMultiSelect.vue";
 import { getStatuses } from "@/components/Status.vue";
 import { useRoute } from "vue-router";
-import type { Task } from "@/types/task.ts";
+import type { Task, UpdateTaskPayload } from "@/types/task.ts";
 import {getUsers, type SelectUser} from "@/api/authApi.ts";
 
 const route = useRoute();
@@ -56,15 +56,30 @@ const task = ref<Task | null>(null);
 const statusOptions = getStatuses();
 const users = ref<SelectUser[]>([]);
 
+const normalizeUniqueObserverIds = (ids: Array<string | number | bigint>) => {
+  const uniqueByString = new Map<string, string | number | bigint>();
+  ids.forEach((id) => {
+    if (id !== null && id !== undefined && id !== "") {
+      uniqueByString.set(String(id), id);
+    }
+  });
+  return Array.from(uniqueByString.values());
+};
+
 const submitTask = async () => {
   const taskId = route.params.id;
   if (!task.value) return;
   try {
-    const taskData = {
-      ...task.value,
+    const taskData: UpdateTaskPayload = {
+      id: task.value.id,
+      title: task.value.title,
+      description: task.value.description,
+      status: task.value.status,
       performer_id: task.value.performer_id,
       creator_id: task.value.creator_id,
-      observer_ids: task.value.observer_ids,
+      observer_ids: normalizeUniqueObserverIds(
+        (task.value.observer_ids ?? []) as Array<string | number | bigint>,
+      ) as Task["observer_ids"],
     };
     const taskIdBigInt = BigInt(taskId as string);
     await updateTask(taskIdBigInt, taskData);
@@ -78,7 +93,13 @@ const fetchTask = async () => {
   try {
     if (taskId) {
       const taskIdBigInt = BigInt(taskId as string);
-      task.value = await getTaskData(taskIdBigInt);
+      const taskData = await getTaskData(taskIdBigInt);
+      task.value = {
+        ...taskData,
+        observer_ids: normalizeUniqueObserverIds(
+          (taskData.observer_ids ?? []) as Array<string | number | bigint>,
+        ) as Task["observer_ids"],
+      };
       console.log("task", task.value);
     }
   } catch (error) {

@@ -1,6 +1,6 @@
 import axios from '@/api/axiosInstance.ts';
 import { API_URLS } from './apiUrls';
-import type {NewTask, Task} from '@/types/task';
+import type {NewTask, Task, UpdateTaskPayload} from '@/types/task';
 import type { ApiResponse } from '@/types/common';
 
 export const getTasksData = async (
@@ -41,7 +41,7 @@ export const deleteTask = async (id: bigint): Promise<ApiResponse<unknown>> => {
   return response.data;
 };
 
-export const updateTask = async (id: bigint, data: NewTask): Promise<Task> => {
+export const updateTask = async (id: bigint, data: UpdateTaskPayload): Promise<Task> => {
   const response = await axios.put(`${API_URLS.TASK}/${id}`, data, { withCredentials: true });
   return response.data.data;
 };

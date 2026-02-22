@@ -27,6 +27,16 @@ export interface NewTask {
   observer_ids: bigint[];
 }
 
+export interface UpdateTaskPayload {
+  id: number | bigint;
+  title: string;
+  description: string;
+  status: TaskStatus;
+  performer_id: bigint;
+  creator_id: bigint;
+  observer_ids: bigint[];
+}
+
 export interface TaskResponse {
   data: Task;
   status: string;
