@@ -1,11 +1,11 @@
 <template>
-  <TaskList :tasks="tasks" :loading="isLoading" />
+  <TaskList :tasks="tasks" :loading="isLoading" @delete-task="handleDeleteTask" />
 </template>
 
 
 <script lang="ts">
 import {defineComponent, onMounted, ref} from "vue";
-import {getTasksData} from '@/api/taskApi';
+import {deleteTask, getTasksData} from '@/api/taskApi';
 import type {Task} from "@/types/task.ts";
 import TaskList from "@/components/TaskList.vue";
 
@@ -18,6 +18,7 @@ export default defineComponent({
 
     const fetchTasks = async () => {
       try {
+        isLoading.value = true;
         tasks.value = await getTasksData();
         console.log("tasks", tasks.value);
       } catch (error) {
@@ -27,11 +28,24 @@ export default defineComponent({
       }
     };
 
+    const handleDeleteTask = async (taskId: number) => {
+      const isConfirmed = window.confirm("Удалить задачу?");
+      if (!isConfirmed) return;
+
+      try {
+        await deleteTask(taskId);
+        await fetchTasks();
+      } catch (error) {
+        console.error("Ошибка удаления задачи:", error);
+      }
+    };
+
     onMounted(fetchTasks);
 
     return {
       tasks,
       isLoading,
+      handleDeleteTask,
     };
   },
 });

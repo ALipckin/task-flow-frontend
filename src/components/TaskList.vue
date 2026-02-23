@@ -18,15 +18,27 @@
               </div>
               <div>
                 <v-list-item v-for="task in tasks" :key="task.id">
-                  <router-link :to="`/task/edit/${task.id}`" class="task-link p-0">
-                    <TaskCard
-                      :title="task.title"
-                      :text="task.description">
-                      <template v-slot:actions>
-                        <Status :status="task.status"/>
-                      </template>
-                    </TaskCard>
-                  </router-link>
+                  <div class="task-item">
+                    <router-link :to="`/task/edit/${task.id}`" class="task-link p-0 task-link-grow">
+                      <TaskCard
+                        :title="task.title"
+                        :text="task.description">
+                        <template v-slot:actions>
+                          <Status :status="task.status"/>
+                        </template>
+                      </TaskCard>
+                    </router-link>
+                    <v-btn
+                      color="error"
+                      variant="outlined"
+                      icon
+                      size="small"
+                      aria-label="Удалить задачу"
+                      @click.stop="onDeleteTask(task.id)"
+                    >
+                      <font-awesome-icon :icon="['fas', 'trash-can']" />
+                    </v-btn>
+                  </div>
                 </v-list-item>
               </div>
              </v-list>
@@ -66,6 +78,12 @@ export default defineComponent({
       default: false,
     },
   },
+  emits: ['delete-task'],
+  methods: {
+    onDeleteTask(taskId: number) {
+      this.$emit('delete-task', taskId);
+    },
+  },
 });
 </script>
 
@@ -85,5 +103,15 @@ export default defineComponent({
 
 .p-0 {
   padding: 0;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-link-grow {
+  flex: 1;
 }
 </style>

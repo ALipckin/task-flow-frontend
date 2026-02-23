@@ -36,8 +36,8 @@ export const createTask = async (data: NewTask): Promise<Task> => {
   return response.data.data;
 };
 
-export const deleteTask = async (id: bigint): Promise<ApiResponse<unknown>> => {
-  const response = await axios.get<ApiResponse<unknown>>(`${API_URLS.TASK}/${id}`, { withCredentials: true });
+export const deleteTask = async (id: number | bigint): Promise<ApiResponse<unknown>> => {
+  const response = await axios.delete<ApiResponse<unknown>>(`${API_URLS.TASK}/${id}`, { withCredentials: true });
   return response.data;
 };
 
