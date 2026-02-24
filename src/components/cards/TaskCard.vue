@@ -6,7 +6,9 @@
       <v-card-item>
         <div>
           <div class="text-h6 mb-1">
-            {{ title }}
+            <slot name="title">
+              {{ title }}
+            </slot>
           </div>
           <div class="text-caption">{{ text }}</div>
           <slot name="actions"></slot>
