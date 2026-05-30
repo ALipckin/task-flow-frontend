@@ -48,6 +48,7 @@ import {ref} from 'vue'
 import {useAuthStore} from '../store/auth'
 import {useRouter} from 'vue-router'
 import AuthCard from "@/components/cards/AuthCard.vue";
+import { getApiErrorMessage } from '@/api/errors';
 
 
 const name = ref('')
@@ -69,8 +70,8 @@ const handleRegister = async () => {
       name: name.value
     })
     await router.push('/login')
-  } catch {
-    errorMessage.value = 'Неверные учетные данные'
+  } catch (error) {
+    errorMessage.value = getApiErrorMessage(error, 'Не удалось зарегистрироваться')
   } finally {
     loading.value = false
   }

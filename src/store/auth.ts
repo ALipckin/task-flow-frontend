@@ -57,7 +57,7 @@ export const useAuthStore = defineStore('auth', {
         await axios.post(API_URLS.REGISTER, credentials);
       } catch (error) {
         console.error("Register error", error);
-        throw new Error('Register error');
+        throw error;
       }
     },
 
