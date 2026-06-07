@@ -30,7 +30,14 @@
               <UserSelect v-model="task.performer_id" :users="users" label="Исполнитель" />
               <UserSelect v-model="task.creator_id" :users="users" label="Создатель" />
               <UserMultiSelect v-model="task.observer_ids" :users="users" label="Наблюдатели"/>
-              <v-btn type="submit" color="primary">Редактировать задачу</v-btn>
+              <v-alert
+                v-if="errorMessage"
+                type="error"
+                class="mt-4"
+              >
+                {{ errorMessage }}
+              </v-alert>
+              <v-btn type="submit" color="primary" class="mt-4">Редактировать задачу</v-btn>
             </v-form>
             <v-progress-circular v-else indeterminate></v-progress-circular>
           </v-card-text>
@@ -43,6 +50,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { getTaskData, updateTask } from "@/api/taskApi.ts";
+import { getApiErrorMessage } from "@/api/errors";
 import UserSelect from "@/components/UserSelect.vue";
 import UserMultiSelect from "@/components/UserMultiSelect.vue";
 import { getStatuses } from "@/components/Status.vue";
@@ -52,6 +60,7 @@ import {getUsers, type SelectUser} from "@/api/authApi.ts";
 
 const route = useRoute();
 const loading = ref<boolean>(true);
+const errorMessage = ref("");
 const task = ref<Task | null>(null);
 const statusOptions = getStatuses();
 const users = ref<SelectUser[]>([]);
@@ -69,6 +78,7 @@ const normalizeUniqueObserverIds = (ids: Array<string | number | bigint>) => {
 const submitTask = async () => {
   const taskId = route.params.id;
   if (!task.value) return;
+  errorMessage.value = "";
   try {
     const taskData: UpdateTaskPayload = {
       id: task.value.id,
@@ -84,7 +94,7 @@ const submitTask = async () => {
     const taskIdBigInt = BigInt(taskId as string);
     await updateTask(taskIdBigInt, taskData);
   } catch (error) {
-    console.error("Ошибка задачи:", error);
+    errorMessage.value = getApiErrorMessage(error, "Не удалось сохранить задачу");
   }
 };
 
